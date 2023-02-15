@@ -9,20 +9,19 @@ const headers = {
   "X-Hasura-Role": process.env.NEXT_PUBLIC_X_HASURA_ROLE,
 }
 
-const fetchApi = (gqlQuery: any) => {
+const fetchApi = (gqlQuery: any, triggerValue) => {
   const options = {
     "method": "POST",
     "headers": headers,
     "body": JSON.stringify(gqlQuery)
   };
-  const { isLoading, error, data } = useQuery("data", () =>
-
+  const { isLoading, isError, error, data } = useQuery("data", () =>
     fetch(endpoint, options)
       .then((res) => res.json())
       .then((res) => res.data)
-  );
+  , { enabled: triggerValue });
 
-  console.log(isLoading, error, data)
+  return { isLoading, isError, error, data }
 }
 
 export default fetchApi
